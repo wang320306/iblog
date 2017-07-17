@@ -1,0 +1,31 @@
+{
+  "name": "iblog",
+  "description": "iblog",
+  "main": "app.js",
+  "authors": [
+    "wang"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "iblog"
+  ],
+  "homepage": "www.ifenwang.com",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "public/bower",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "animate.css": "^3.5.2",
+    "bootstrap": "^3.3.7",
+    "jquery": "1.12.4",
+    "font-awesome": "^4.7.0",
+    "angular": "1.6.4",
+    "angular-ui-router": "^1.0.5",
+    "textAngular": "^1.5.16",
+    "angular-loading-bar": "^0.9.0"
+  }
+}

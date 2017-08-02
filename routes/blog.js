@@ -7,95 +7,92 @@ var serverConstant = new ServerContents();
 
 // 博客首页
 router.get('/index', function(req, res, next) {
-    console.log("进入博客首页");
     res.render('blog/list.html');
 });
 
-// 获取文章列表
+// 博客首页获取文章列表
 router.get('/:start/list', function(req, res, next) {
+
+    // 获取起始数目
     var start = req.params.start;
-    console.log("开始获取"+start);
     if (typeof(start) == "undefined" || start == null || start == "") {
-        console.log("设置默认分页起始数");
         start = serverConstant.getPageStartDefault();
     }
 
+    // 发送get请求获取内容
     var url = serverConstant.getBackServerUrl() + "/article/" + start + "/list";
-    console.log("获取博客文章列表url"+ url);
-
     request.get(url, function(error, response, body) {
 
         if (null != error) {
             res.render('error/error_unknown');
+            return;
         }
 
-        console.error("statusCode:" + response.statusCode)
-        if (200 != response.statusCode) {
+        if (200 == response.statusCode) {
+            var result = JSON.parse(body);
+            console.log("return: " + body);
+            var returnCode = result.returnCode;
+            console.log("returnCode:" + returnCode);
+            var returnMsg = result.returnMsg;
+            console.log("returnMsg:" + returnMsg);
+
+            if (0 == returnCode) {
+                res.json(result.data);
+            }
+            else {
+
+            }
+        } else {
             res.render('error/error');
-        }
-
-        //console.log(body);
-        var result = JSON.parse(body);
-
-        var returnCode = result.returnCode;
-        console.log("returnCode:" + returnCode);
-        var returnMsg = result.returnMsg;
-        console.log("returnMsg:" + returnMsg);
-
-        if (0 == returnCode) {
-            res.json(result.data);
+            return;
         }
 
     });
 
-});
-
-// 获取标签集合
-router.get('/tags', function(req, res, next) {
-    console.log("获取博客标签集合");
-    var url = serverConstant.getBackServerUrl() + "/article/tags";
-    request.get(url, function(error, response, body) {
-        var bo = JSON.parse(body);
-        res.json(bo.dataList);
-    });
 });
 
 // 博客详细页面
 router.get('/article', function(req, res, next) {
-    console.log("进入博客详细页面");
     res.render('blog/article.html');
 });
 
-// 获取文章详细
-router.get("/:id/get", function (req, res, next) {
+// 博客详细页面获取内容
+router.get("/:date/:id/get", function (req, res, next) {
+
+    var date = req.params.date;
     var id = req.params.id;
-    console.log("开始获取文章详情:" + id);
-    if (typeof(id) == "undefined" || id == null || id == "") {
-        res.render('error/error');
+    if (typeof(id) == "undefined" || id == null || id == "" || typeof(date) == "undefined" || date == null || date == "") {
+        res.render('error/error_text');
+        return;
     }
 
-    var url = serverConstant.getBackServerUrl() + "/article/list/" + id;
-    console.log("获取文章内容url"+ url);
+    var url = serverConstant.getBackServerUrl() + "/article/list/" + date + id;
+    console.log("获取文章内容url", url);
     request.get(url, function(error, response, body) {
-        if (null != error) {
-            res.render('error/error_unknown');
+        if (error) {
+            res.render('error/error_text');
+            return;
         }
 
-        console.error("statusCode:" + response.statusCode)
-        if (200 != response.statusCode) {
-            res.render('error/error');
+        if (response && 200 != response.statusCode) {
+            res.render('error/error_text');
+            return;
         }
 
-        console.log(body);
         var result = JSON.parse(body);
-
         var returnCode = result.returnCode;
-        console.log("returnCode:" + returnCode);
-        var returnMsg = result.returnMsg;
-        console.log("returnMsg:" + returnMsg);
+
+        if (null == result.data){
+            console.log("response body null.");
+            res.render('error/error_text');
+            return;
+        }
 
         if (0 == returnCode) {
             res.json(result.data);
+        }
+        else {
+            res.render('error/error_text');
         }
 
     });

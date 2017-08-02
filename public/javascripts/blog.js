@@ -19,18 +19,20 @@
 	            Windows: function() { return navigator.userAgent.match(/IEMobile/i); },
 	            any: function() { return (isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Opera() || isMobile.Windows()); }
 	        };
-		
+
+        //jQuery("#page").niceScroll({cursorcolor:"#eee"});
+
 		// 页面加载完毕关闭等待效果
 		/*jQuery(window).load(function() {
 			$("#preloader").delay(350).fadeOut("slow");
 		});*/
 		
 		// 设置列表高度并美化滚动条
-		setSideBarHeight();
+		/*setSideBarHeight();
 		function setSideBarHeight(){
 			jQuery('.sidebar-content').css('height', (jQuery(window).height() - 200));
 			jQuery("#sidebar-content").niceScroll({cursorcolor:"#eee"});
-		}
+		}*/
 		
 		// 导航栏鼠标悬停效果显示
 		jQuery('li.dropdown, li.dropdown-submenu').hover(

@@ -51,7 +51,8 @@ body #loading-bar-spinner .spinner-icon {
 body {
 	letter-spacing: 1px;
 	color: #666666;
-	font-family: 'Playfair Display', serif
+	font-family: 'Playfair Display', serif;
+	cursor: auto !important;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -269,7 +270,7 @@ body.bg4 { background: url(../images/bg4.jpg) no-repeat fixed center top; }
 }
 
 #loadingArea .loadingContent {
-	margin: 150px auto 150px;
+	margin: 200px auto 200px;
 }
 
 /* responsive

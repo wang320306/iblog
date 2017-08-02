@@ -10,7 +10,7 @@ ngApp.config(function ($stateProvider, $urlRouterProvider) {
             templateUrl: '/blog/index'
         })
         .state('article', {
-            url: '/blog/:aid',
+            url: '/blog/:date/:id',
             controller: 'ngArticleCtl',
             templateUrl: '/blog/article'
         });
@@ -19,7 +19,7 @@ ngApp.config(function ($stateProvider, $urlRouterProvider) {
 ngApp.config(['cfpLoadingBarProvider', function(cfpLoadingBarProvider) {
     cfpLoadingBarProvider.includeSpinner = true;
     cfpLoadingBarProvider.includeBar = true;
-    cfpLoadingBarProvider.latencyThreshold = 10;
+    cfpLoadingBarProvider.latencyThreshold = 100;
 }]);
 
 ngApp.controller('ngBlogCtl', function ($scope, ngFactory) {
@@ -38,6 +38,11 @@ ngApp.controller('ngBlogCtl', function ($scope, ngFactory) {
     });
 
     $scope.pagesubmit = function(start) {
+
+        if (!start){
+            return;
+        }
+
         if ($scope.pageinfo.start == start) {
             return;
         }
@@ -58,46 +63,29 @@ ngApp.controller('ngBlogCtl', function ($scope, ngFactory) {
 
 });
 
-ngApp.controller('ngArticleCtl', function ($scope, $http, $stateParams) {
-    var aid = $stateParams.aid;
-    $http({
-        method:'GET',
-        url: '/blog/'+aid+'/get'
-    }).then(function successCallback(response) {
-        $scope.article = response.data;
-        $scope.articleId = response.data.articleId;
-        $scope.mainTitle = response.data.mainTitle;
-        $scope.subTitle = response.data.subTitle;
-        $scope.content = response.data.content;
-        $scope.clicks = response.data.clicks;
-        $scope.blogStatus = response.data.blogStatus;
-        $scope.blogType = response.data.blogType;
-        $scope.userId = response.data.userId;
-        $scope.createTime = response.data.createTime;
-
-    }, function errorCallback(response) {
-        // error response
-    });
-});
-
-ngApp.filter('trustHtml', function ($sce) {
-    return function (input) {
-        return $sce.trustAsHtml(input);
+ngApp.controller('ngArticleCtl', function ($scope, ngFactory, $http, $stateParams) {
+    if ($stateParams.id && $stateParams.date) {
+        ngFactory.getBlog($stateParams.id, $stateParams.date).then(function (response) {
+            $scope.article = response.data;
+        });
     }
 });
 
 ngApp.factory("ngFactory", function ($http) {
     return {
-        /*allTags: function () {
-            return $http.get("/blog/tags");
-        },*/
-
+        // get blog list by page
         pageBlog: function (start) {
             return $http.get("/blog/"+start+"/list/");
         },
-
-        article: function () {
-            return $http.get("/blog/get/");
+        // get article info
+        getBlog: function (id, date) {
+            return $http.get("/blog/" + date + "/" + id + "/get");
         }
+    }
+});
+
+ngApp.filter('trustHtml', function ($sce) {
+    return function (input) {
+        return $sce.trustAsHtml(input);
     }
 });

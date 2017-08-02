@@ -1,4 +1,4 @@
-			<div id="post-list-area" class="animated slideInDown">
+			<div id="post-list-area" class="animated zoomIn"><!--slideInDown-->
 				<div class="container">
 					<div class="row">
 						<div class="col-xs-12 col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2">
@@ -13,7 +13,7 @@
 											<small>{{article.subTitle}}</small>
 										</div>
 										<div class="post-item-footer">
-											<a class="read-more" ui-sref="article({aid:article.articleId})">READ MORE <i class="fa fa-angle-double-right"></i></a>
+											<a class="read-more" ui-sref="article({id:article.simpleId, date:article.simpleDate})">READ MORE <i class="fa fa-angle-double-right"></i></a>
 										</div>
 									</div>
 								</article>
